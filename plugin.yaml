@@ -8,6 +8,7 @@ plugin:
   category: "statistics"
   subcategory: "phosr"
   icon: "biotech"
+  repository: https://github.com/noatgnu/phosr-maxquant-tmt-plugin
 
 runtime:
   environments: ["r"]
