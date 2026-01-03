@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plugin Documentation</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1 {
+            border-bottom: 2px solid #2196f3;
+            padding-bottom: 10px;
+            color: #1976d2;
+        }
+        h2 {
+            margin-top: 30px;
+            color: #1976d2;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 5px;
+        }
+        h3 {
+            margin-top: 20px;
+            color: #424242;
+        }
+        h4 {
+            color: #616161;
+        }
+        a {
+            color: #2196f3;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        blockquote {
+            border-left: 4px solid #2196f3;
+            margin: 0;
+            padding-left: 15px;
+            color: #666;
+            background: #f5f9fc;
+            padding: 10px 15px;
+            border-radius: 4px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #2196f3;
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        ul, ol {
+            padding-left: 25px;
+        }
+        li {
+            margin: 5px 0;
+        }
+        strong {
+            font-weight: 600;
+            color: #1976d2;
+        }
+        .mermaid {
+            text-align: center;
+            margin: 20px 0;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+<h1 id="phosr-maxquant-tmt-analysis">PhosR MaxQuant TMT Analysis</h1>
+<p><strong>ID</strong>: <code>phosr-maxquant-tmt</code><br>
+<strong>Version</strong>: 1.0.0<br>
+<strong>Category</strong>: statistics<br>
+<strong>Author</strong>: CauldronGO Team</p>
+<h2 id="description">Description</h2>
+<p>Comprehensive phosphoproteomic data analysis including normalization, differential analysis, kinase activity prediction, pathway enrichment, PTM-SET analysis, and signaling network visualization using PhosR</p>
+<h2 id="workflow-diagram">Workflow Diagram</h2>
+<pre class="mermaid">flowchart TD
+    Start([Start]) --&gt; step1
+    step1[Reading PTM data...]
+    step1 --&gt; step2
+    step2[Reading annotation...]
+    step2 --&gt; step3
+    step3[Processing PTM sites...]
+    step3 --&gt; step4
+    step4[Processing global protein data...]
+    step4 --&gt; step5
+    step5[Creating SummarizedExperiment for PTM...]
+    step5 --&gt; step6
+    step6[Filtering, normalization, and imputation for PTM...]
+    step6 --&gt; step7
+    step7[Statistical testing for]
+    step7 --&gt; step8
+    step8[Generating QC and volcano plots...]
+    step8 --&gt; step9
+    step9[Reading data...]
+    step9 --&gt; step10
+    step10[Creating QFeatures object...]
+    step10 --&gt; step11
+    step11[Filtering and aggregating PSMs to Peptidoforms...]
+    step11 --&gt; step12
+    step12[Processing PTM peptidoform data...]
+    step12 --&gt; step13
+    step13[Fitting statistical models...]
+    step13 --&gt; step14
+    step14[Hypothesis testing...]
+    step14 --&gt; step15
+    step15[Generating quality control and volcano plots...]
+    step15 --&gt; End([End])
+</pre>
+<h2 id="runtime">Runtime</h2>
+<ul>
+<li>
+<p><strong>Environments</strong>: <code>r</code></p>
+</li>
+<li>
+<p><strong>Entrypoint</strong>: <code>phosr_maxquant_tmt_modular.R</code></p>
+</li>
+</ul>
+<h2 id="inputs">Inputs</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Label</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Visibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>input_file</code></td>
+<td>PTM Evidence File</td>
+<td>file</td>
+<td>Yes</td>
+<td>-</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>fasta_file</code></td>
+<td>FASTA File</td>
+<td>file</td>
+<td>No</td>
+<td>-</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>annotation_file</code></td>
+<td>PTM Annotation File</td>
+<td>file</td>
+<td>Yes</td>
+<td>-</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>annotation_protein_file</code></td>
+<td>Protein Annotation File</td>
+<td>file</td>
+<td>No</td>
+<td>-</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>feature_id_col</code></td>
+<td>PTM Feature ID Column</td>
+<td>text</td>
+<td>Yes</td>
+<td>Sequence</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>site_col</code></td>
+<td>PTM Site Column</td>
+<td>text</td>
+<td>Yes</td>
+<td>Modified sequence</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>protein_col</code></td>
+<td>PTM Protein Column</td>
+<td>text</td>
+<td>Yes</td>
+<td>Proteins</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>probability_col</code></td>
+<td>PTM Probability Column</td>
+<td>text</td>
+<td>No</td>
+<td>Phospho (STY) Probabilities</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>min_probability</code></td>
+<td>Minimum Localization Probability</td>
+<td>number (min: 0, max: 1, step: 0)</td>
+<td>No</td>
+<td>0.75</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>protein_file</code></td>
+<td>Protein Evidence File</td>
+<td>file</td>
+<td>No</td>
+<td>-</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>protein_feature_id_col</code></td>
+<td>Protein Feature ID Column</td>
+<td>text</td>
+<td>No</td>
+<td>Sequence</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>protein_id_col</code></td>
+<td>Protein ID Column</td>
+<td>text</td>
+<td>No</td>
+<td>Proteins</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>comparison_file</code></td>
+<td>Comparison Matrix File</td>
+<td>file</td>
+<td>No</td>
+<td>-</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>log2_transform</code></td>
+<td>Apply Log2 Transformation</td>
+<td>boolean</td>
+<td>No</td>
+<td>true</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>exclude_conditions</code></td>
+<td>Exclude Conditions (comma-separated)</td>
+<td>text</td>
+<td>No</td>
+<td>-</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>remove_norm_channel</code></td>
+<td>Remove 'Norm' Channel</td>
+<td>boolean</td>
+<td>No</td>
+<td>true</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>col_filter</code></td>
+<td>Column Completeness Threshold</td>
+<td>number (min: 0, max: 1, step: 0)</td>
+<td>No</td>
+<td>0.7</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>row_filter</code></td>
+<td>Row Completeness Threshold</td>
+<td>number (min: 0, max: 1, step: 0)</td>
+<td>No</td>
+<td>0.7</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>impute_order</code></td>
+<td>Imputation Order</td>
+<td>select (before, after)</td>
+<td>No</td>
+<td>after</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>impute</code></td>
+<td>Imputation Method</td>
+<td>select (none, knn, MinDet, MinProb, min, zero, mixed, nbavg, with, QRILC, MLE, bpca)</td>
+<td>No</td>
+<td>knn</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>normalize_method</code></td>
+<td>Normalization Method</td>
+<td>select (none, center.median, center.mean, quantiles, quantiles.robust, vsn)</td>
+<td>No</td>
+<td>center.median</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>aggregation_order</code></td>
+<td>Aggregation Order</td>
+<td>select (before, after)</td>
+<td>No</td>
+<td>after</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>summarization_method</code></td>
+<td>Protein Summarization Method</td>
+<td>select (mean, median, sum)</td>
+<td>No</td>
+<td>mean</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>adjust_method</code></td>
+<td>P-value Adjustment Method</td>
+<td>select (BH, bonferroni, holm, hochberg, BY, none)</td>
+<td>No</td>
+<td>BH</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>alpha</code></td>
+<td>Significance Level</td>
+<td>number (min: 0, max: 0, step: 0)</td>
+<td>No</td>
+<td>0.05</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>lfc_threshold</code></td>
+<td>Log2 Fold Change Threshold</td>
+<td>number (min: 0, max: 5, step: 0)</td>
+<td>No</td>
+<td>1</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>organism</code></td>
+<td>Organism</td>
+<td>select (human, mouse)</td>
+<td>Yes</td>
+<td>human</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>perform_kinase_analysis</code></td>
+<td>Perform Kinase Activity Analysis</td>
+<td>boolean</td>
+<td>No</td>
+<td>true</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>kinase_top_substrates</code></td>
+<td>Top Substrates for Kinase Prediction</td>
+<td>number (min: 10, max: 100, step: 5)</td>
+<td>No</td>
+<td>30</td>
+<td>Visible when <code>perform_kinase_analysis</code> = <code>true</code></td>
+</tr>
+<tr>
+<td><code>kinase_score_threshold</code></td>
+<td>Kinase Score Threshold</td>
+<td>number (min: 0, max: 1, step: 0)</td>
+<td>No</td>
+<td>0.8</td>
+<td>Visible when <code>perform_kinase_analysis</code> = <code>true</code></td>
+</tr>
+<tr>
+<td><code>kinase_num_motifs</code></td>
+<td>Number of Kinase Motifs</td>
+<td>number (min: 1, max: 10, step: 1)</td>
+<td>No</td>
+<td>5</td>
+<td>Visible when <code>perform_kinase_analysis</code> = <code>true</code></td>
+</tr>
+<tr>
+<td><code>top_pathways_plot</code></td>
+<td>Top Pathways to Plot</td>
+<td>number (min: 10, max: 50, step: 5)</td>
+<td>No</td>
+<td>20</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>top_ptmset_plot</code></td>
+<td>Top PTM-SETs to Plot</td>
+<td>number (min: 10, max: 50, step: 5)</td>
+<td>No</td>
+<td>20</td>
+<td>Always visible</td>
+</tr>
+<tr>
+<td><code>top_diff_sites_heatmap</code></td>
+<td>Top Differential Sites in Heatmap</td>
+<td>number (min: 10, max: 100, step: 10)</td>
+<td>No</td>
+<td>50</td>
+<td>Visible when <code>perform_kinase_analysis</code> = <code>true</code></td>
+</tr>
+<tr>
+<td><code>top_phosphosite_heatmap</code></td>
+<td>Top Phosphosites by Variance in Heatmap</td>
+<td>number (min: 10, max: 100, step: 10)</td>
+<td>No</td>
+<td>50</td>
+<td>Visible when <code>perform_kinase_analysis</code> = <code>true</code></td>
+</tr>
+<tr>
+<td><code>network_plot_top_interactions</code></td>
+<td>Top Kinase-Substrate Interactions to Plot</td>
+<td>number (min: 20, max: 100, step: 10)</td>
+<td>No</td>
+<td>50</td>
+<td>Visible when <code>perform_kinase_analysis</code> = <code>true</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="input-details">Input Details</h3>
+<h4 id="ptm-evidence-file-input-file">PTM Evidence File (<code>input_file</code>)</h4>
+<p>MaxQuant evidence.txt file with PTM data (e.g., from phospho search)</p>
+<h4 id="fasta-file-fasta-file">FASTA File (<code>fasta_file</code>)</h4>
+<p>Protein database FASTA file for site mapping</p>
+<h4 id="ptm-annotation-file-annotation-file">PTM Annotation File (<code>annotation_file</code>)</h4>
+<p>Sample annotation with columns: Sample, Condition, BioReplicate</p>
+<h4 id="protein-annotation-file-annotation-protein-file">Protein Annotation File (<code>annotation_protein_file</code>)</h4>
+<p>Sample annotation for protein data (same format as PTM annotation)</p>
+<h4 id="ptm-feature-id-column-feature-id-col">PTM Feature ID Column (<code>feature_id_col</code>)</h4>
+<p>Column name for feature identifiers in PTM file (stripped sequence)</p>
+<h4 id="ptm-site-column-site-col">PTM Site Column (<code>site_col</code>)</h4>
+<p>Column name for PTM site information (modified sequence)</p>
+<h4 id="ptm-protein-column-protein-col">PTM Protein Column (<code>protein_col</code>)</h4>
+<p>Column name for protein identifiers in PTM file</p>
+<h4 id="ptm-probability-column-probability-col">PTM Probability Column (<code>probability_col</code>)</h4>
+<p>Column name for site localization probabilities (e.g., Phospho (STY) Probabilities)</p>
+<h4 id="minimum-localization-probability-min-probability">Minimum Localization Probability (<code>min_probability</code>)</h4>
+<p>Minimum probability score for valid PTM sites (0-1)</p>
+<h4 id="protein-evidence-file-protein-file">Protein Evidence File (<code>protein_file</code>)</h4>
+<p>MaxQuant evidence.txt file for protein-level data (optional)</p>
+<h4 id="protein-feature-id-column-protein-feature-id-col">Protein Feature ID Column (<code>protein_feature_id_col</code>)</h4>
+<p>Column name for peptide sequence in protein evidence file</p>
+<h4 id="protein-id-column-protein-id-col">Protein ID Column (<code>protein_id_col</code>)</h4>
+<p>Column name for protein IDs in protein evidence file</p>
+<h4 id="comparison-matrix-file-comparison-file">Comparison Matrix File (<code>comparison_file</code>)</h4>
+<p>Pairwise comparisons (columns: comparison_label, condition_A, condition_B)</p>
+<h4 id="apply-log2-transformation-log2-transform">Apply Log2 Transformation (<code>log2_transform</code>)</h4>
+<p>Apply log2 transformation to intensities</p>
+<h4 id="exclude-conditions-comma-separated-exclude-conditions">Exclude Conditions (comma-separated) (<code>exclude_conditions</code>)</h4>
+<p>Comma-separated list of conditions to exclude from analysis (e.g., 'Norm,Empty')</p>
+<h4 id="remove-norm-channel-remove-norm-channel">Remove 'Norm' Channel (<code>remove_norm_channel</code>)</h4>
+<p>Automatically remove samples with condition 'Norm'</p>
+<h4 id="column-completeness-threshold-col-filter">Column Completeness Threshold (<code>col_filter</code>)</h4>
+<p>Maximum proportion of missing values allowed per sample. Default 0.7 = keep samples with ≥30% valid measurements.</p>
+<h4 id="row-completeness-threshold-row-filter">Row Completeness Threshold (<code>row_filter</code>)</h4>
+<p>Maximum proportion of missing values allowed per feature. Default 0.7 = keep features with ≥30% valid measurements.</p>
+<h4 id="imputation-order-impute-order">Imputation Order (<code>impute_order</code>)</h4>
+<p>When to impute missing values relative to normalization. 'after': normalize then impute. 'before': impute then normalize.</p>
+<ul>
+<li><strong>Options</strong>: <code>before</code>, <code>after</code></li>
+</ul>
+<h4 id="imputation-method-impute">Imputation Method (<code>impute</code>)</h4>
+<p>Imputation method for missing values</p>
+<ul>
+<li><strong>Options</strong>: <code>none</code>, <code>knn</code>, <code>MinDet</code>, <code>MinProb</code>, <code>min</code>, <code>zero</code>, <code>mixed</code>, <code>nbavg</code>, <code>with</code>, <code>QRILC</code>, <code>MLE</code>, <code>bpca</code></li>
+</ul>
+<h4 id="normalization-method-normalize-method">Normalization Method (<code>normalize_method</code>)</h4>
+<p>Normalization method to apply</p>
+<ul>
+<li><strong>Options</strong>: <code>none</code>, <code>center.median</code>, <code>center.mean</code>, <code>quantiles</code>, <code>quantiles.robust</code>, <code>vsn</code></li>
+</ul>
+<h4 id="aggregation-order-aggregation-order">Aggregation Order (<code>aggregation_order</code>)</h4>
+<p>When to aggregate peptides to proteins. 'after': normalize/impute peptides then aggregate. 'before': aggregate peptides then normalize proteins.</p>
+<ul>
+<li><strong>Options</strong>: <code>before</code>, <code>after</code></li>
+</ul>
+<h4 id="protein-summarization-method-summarization-method">Protein Summarization Method (<code>summarization_method</code>)</h4>
+<p>Method for combining peptide intensities to protein level. 'mean': arithmetic mean. 'median': median. 'sum': sum.</p>
+<ul>
+<li><strong>Options</strong>: <code>mean</code>, <code>median</code>, <code>sum</code></li>
+</ul>
+<h4 id="p-value-adjustment-method-adjust-method">P-value Adjustment Method (<code>adjust_method</code>)</h4>
+<p>Method for multiple testing correction</p>
+<ul>
+<li><strong>Options</strong>: <code>BH</code>, <code>bonferroni</code>, <code>holm</code>, <code>hochberg</code>, <code>BY</code>, <code>none</code></li>
+</ul>
+<h4 id="significance-level-alpha">Significance Level (<code>alpha</code>)</h4>
+<p>Adjusted p-value threshold for significance</p>
+<h4 id="log2-fold-change-threshold-lfc-threshold">Log2 Fold Change Threshold (<code>lfc_threshold</code>)</h4>
+<p>Minimum absolute log2 fold-change threshold for significance</p>
+<h4 id="organism-organism">Organism (<code>organism</code>)</h4>
+<p>Organism for kinase-substrate database</p>
+<ul>
+<li><strong>Options</strong>: <code>human</code>, <code>mouse</code></li>
+</ul>
+<h4 id="perform-kinase-activity-analysis-perform-kinase-analysis">Perform Kinase Activity Analysis (<code>perform_kinase_analysis</code>)</h4>
+<p>Predict kinase activities and kinase-substrate relationships</p>
+<h4 id="top-substrates-for-kinase-prediction-kinase-top-substrates">Top Substrates for Kinase Prediction (<code>kinase_top_substrates</code>)</h4>
+<p>Number of top substrates to select per kinase</p>
+<h4 id="kinase-score-threshold-kinase-score-threshold">Kinase Score Threshold (<code>kinase_score_threshold</code>)</h4>
+<p>Minimum score threshold for kinase-substrate predictions</p>
+<h4 id="number-of-kinase-motifs-kinase-num-motifs">Number of Kinase Motifs (<code>kinase_num_motifs</code>)</h4>
+<p>Number of motifs to consider in kinase-substrate scoring (higher values increase sensitivity but computation time)</p>
+<h4 id="top-pathways-to-plot-top-pathways-plot">Top Pathways to Plot (<code>top_pathways_plot</code>)</h4>
+<p>Number of top enriched pathways to show in plots</p>
+<h4 id="top-ptm-sets-to-plot-top-ptmset-plot">Top PTM-SETs to Plot (<code>top_ptmset_plot</code>)</h4>
+<p>Number of top enriched kinase substrate sets to show in plots</p>
+<h4 id="top-differential-sites-in-heatmap-top-diff-sites-heatmap">Top Differential Sites in Heatmap (<code>top_diff_sites_heatmap</code>)</h4>
+<p>Number of top differential phosphosites to show in heatmap</p>
+<h4 id="top-phosphosites-by-variance-in-heatmap-top-phosphosite-heatmap">Top Phosphosites by Variance in Heatmap (<code>top_phosphosite_heatmap</code>)</h4>
+<p>Number of phosphosites with highest kinase score variance to show in heatmap</p>
+<h4 id="top-kinase-substrate-interactions-to-plot-network-plot-top-interactions">Top Kinase-Substrate Interactions to Plot (<code>network_plot_top_interactions</code>)</h4>
+<p>Number of top kinase-substrate interactions to show in network plots</p>
+<h2 id="outputs">Outputs</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>File</th>
+<th>Type</th>
+<th>Format</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dpa_results</code></td>
+<td><code>dpa_results.txt</code></td>
+<td>data</td>
+<td>tsv</td>
+<td>Differential Phosphosite Abundance (DPA) results from MSqRob2 analysis. Contains logFC, p-values, and adjusted p-values for each phosphosite across all comparisons. Rows represent phosphosites, columns include statistical measures and comparison information.</td>
+</tr>
+<tr>
+<td><code>dpu_results_phosr_format</code></td>
+<td><code>dpu_results_phosr_format.txt</code></td>
+<td>data</td>
+<td>tsv</td>
+<td>Differential Protein Use (DPU) results in PhosR format. Contains phosphosite differential analysis normalized by protein abundance. Includes PhosR_ID (GENE;SITE; format), Gene symbols, feature IDs, and statistical results across all comparisons. Used for downstream PhosR pathway and kinase analyses.</td>
+</tr>
+<tr>
+<td><code>phosphosite_intensities</code></td>
+<td><code>phosphosite_intensities.txt</code></td>
+<td>data</td>
+<td>tsv</td>
+<td>Normalized log2-transformed phosphosite intensities. Matrix with phosphosites in rows and samples in columns. Values represent normalized abundance levels after QC filtering, normalization, and optional imputation. Used as input for differential analysis.</td>
+</tr>
+<tr>
+<td><code>kinase_substrate_scores</code></td>
+<td><code>kinase_substrate_scores.txt</code></td>
+<td>data</td>
+<td>tsv</td>
+<td>PhosR kinase-substrate prediction scores. Matrix with phosphosites (PhosR_ID format: GENE;SITE;) in rows and kinases in columns. Scores represent predicted kinase-substrate relationships based on sequence motif matching and PhosphoSitePlus database. Higher scores indicate stronger evidence of kinase-substrate relationship.</td>
+</tr>
+<tr>
+<td><code>kinase_activities</code></td>
+<td><code>kinase_activities.txt</code></td>
+<td>data</td>
+<td>tsv</td>
+<td>Predicted kinase activities across experimental conditions. Contains mean kinase activity scores per condition, calculated from substrate phosphorylation levels weighted by kinase-substrate prediction scores. Rows represent kinases, columns represent conditions.</td>
+</tr>
+<tr>
+<td><code>differential_kinase_activities</code></td>
+<td><code>differential_kinase_activities.txt</code></td>
+<td>data</td>
+<td>tsv</td>
+<td>Differential kinase activity scores between condition pairs. Shows log2 fold-changes in predicted kinase activities for each comparison. Indicates which kinases are more or less active between experimental conditions.</td>
+</tr>
+<tr>
+<td><code>top_differential_sites_data</code></td>
+<td><code>top_differential_sites.txt</code></td>
+<td>data</td>
+<td>tsv</td>
+<td>Top differential phosphosites per comparison (default: top 50 per comparison). Filtered to include only sites with kinase scoring data. Contains logFC, adjusted p-values, PhosR_ID, Gene, feature IDs, and significance flags. Sorted by absolute logFC within each comparison.</td>
+</tr>
+<tr>
+<td><code>pathway_enrichment_all_comparisons</code></td>
+<td><code>pathway_enrichment_all_comparisons.txt</code></td>
+<td>data</td>
+<td>tsv</td>
+<td>Combined Reactome pathway enrichment results for all comparisons. Each row represents an enriched pathway with pathway ID, name, gene counts, p-values, adjusted p-values, and comparison label. Uses Fisher's exact test for over-representation analysis of genes with significant phosphosite changes.</td>
+</tr>
+<tr>
+<td><code>ptmset_enrichment_all_comparisons</code></td>
+<td><code>ptmset_enrichment_all_comparisons.txt</code></td>
+<td>data</td>
+<td>tsv</td>
+<td>Combined PhosR PTM-SET (kinase substrate set) enrichment results for all comparisons. Each row represents a kinase with enriched substrates, including kinase name, substrate counts, p-values, adjusted p-values, and comparison label. Identifies kinases whose known substrates are over-represented among significant phosphosites.</td>
+</tr>
+<tr>
+<td><code>kinase_substrate_network_all_comparisons</code></td>
+<td><code>kinase_substrate_network_all_comparisons.txt</code></td>
+<td>data</td>
+<td>tsv</td>
+<td>Combined kinase-substrate interaction networks for all comparisons. Each row represents a kinase-substrate pair with prediction score, substrate PhosR_ID, gene name, and comparison label. Filtered to significant phosphosites only. Shows which kinases are predicted to regulate which phosphosites in each comparison.</td>
+</tr>
+<tr>
+<td><code>qc_plots</code></td>
+<td><code>qc_plots.pdf</code></td>
+<td>plot</td>
+<td>pdf</td>
+<td>Quality control visualizations: sample boxplots (intensity distributions), PCA plots (sample clustering), and correlation heatmaps. Includes both DPA and DPU data if both analyses are performed. Helps assess data quality, batch effects, and sample relationships.</td>
+</tr>
+<tr>
+<td><code>volcano_plots</code></td>
+<td><code>volcano_plots.pdf</code></td>
+<td>plot</td>
+<td>pdf</td>
+<td>Volcano plots for differential phosphorylation across all comparisons. Each plot shows -log10(p-value) vs log2(fold-change) with significance thresholds indicated. Points colored by significance status. Helps visualize magnitude and significance of phosphosite changes.</td>
+</tr>
+<tr>
+<td><code>kinase_heatmap</code></td>
+<td><code>kinase_heatmap.pdf</code></td>
+<td>plot</td>
+<td>pdf</td>
+<td>Kinase activity heatmaps and differential activity bar plots. Main heatmap shows row-scaled kinase activities across conditions with hierarchical clustering. Bar plots show differential kinase activities for each comparison. Visualizes kinase activation patterns across experimental design.</td>
+</tr>
+<tr>
+<td><code>phosphosite_heatmap</code></td>
+<td><code>phosphosite_heatmap.pdf</code></td>
+<td>plot</td>
+<td>pdf</td>
+<td>Heatmap of top phosphosites with highest kinase score variance. Shows phosphosites (rows) with most variable kinase predictions across kinases (columns). Identifies sites regulated by multiple kinases or showing kinase-specific patterns.</td>
+</tr>
+<tr>
+<td><code>site_class_distribution</code></td>
+<td><code>site_class_distribution.pdf</code></td>
+<td>plot</td>
+<td>pdf</td>
+<td>Bar plots showing distribution of phosphorylated residue types (pS, pT, pY). Includes overall distribution and per-condition counts. Helps assess phosphoproteome coverage and potential biases in site detection.</td>
+</tr>
+<tr>
+<td><code>top_differential_sites_heatmap</code></td>
+<td><code>top_differential_sites.pdf</code></td>
+<td>plot</td>
+<td>pdf</td>
+<td>Intensity heatmap of top differential phosphosites across all samples. Shows log2 intensity values (row-scaled) for top significant sites (filtered by adjusted p-value and fold-change thresholds, limited to sites with kinase data). Displays DPU values if DPU analysis performed, otherwise DPA values. Reveals clustering patterns and regulation of most significantly changing phosphosites.</td>
+</tr>
+<tr>
+<td><code>kinase_family_analysis</code></td>
+<td><code>kinase_family_analysis.pdf</code></td>
+<td>plot</td>
+<td>pdf</td>
+<td>Kinase family-level analysis plots. Bar chart showing number of detected kinases per family and heatmap of family-grouped kinase activities across conditions. Helps identify coordinated regulation at the kinase family level.</td>
+</tr>
+<tr>
+<td><code>pathway_enrichment_plots</code></td>
+<td><code>pathway_enrichment.pdf</code></td>
+<td>plot</td>
+<td>pdf</td>
+<td>Reactome pathway enrichment visualizations for all comparisons. Bar plots show top enriched pathways ranked by -log10(p-value), colored by adjusted p-value. Bubble plots show pathway enrichment across comparisons with bubble size representing gene count. Identifies biological processes affected by phosphorylation changes.</td>
+</tr>
+<tr>
+<td><code>ptmset_enrichment_plots</code></td>
+<td><code>ptmset_enrichment.pdf</code></td>
+<td>plot</td>
+<td>pdf</td>
+<td>PTM-SET kinase substrate enrichment visualizations for all comparisons. Bar plots show top enriched kinase substrate sets ranked by -log10(p-value). Bubble plots show enrichment patterns across comparisons. Identifies kinases whose substrates are coordinately regulated.</td>
+</tr>
+<tr>
+<td><code>kinase_substrate_network_plots</code></td>
+<td><code>kinase_substrate_network.pdf</code></td>
+<td>plot</td>
+<td>pdf</td>
+<td>Network visualizations of top kinase-substrate interactions for each comparison. Bar plots show top kinase-substrate pairs ranked by prediction score. Network plots display kinases (colored nodes) connected to their predicted substrates (gray nodes) with edge width representing score strength. Reveals signaling network topology for significant phosphosites.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li><strong>R Version</strong>: &gt;=4.2</li>
+</ul>
+<h3 id="r-dependencies-external-file">R Dependencies (External File)</h3>
+<p>Dependencies are defined in: <code>r-packages.txt</code></p>
+<ul>
+<li><code>QFeatures</code></li>
+<li><code>msqrob2</code></li>
+<li><code>MsCoreUtils</code></li>
+<li><code>PhosR</code></li>
+<li><code>impute</code></li>
+<li><code>limma</code></li>
+<li><code>ggplot2</code></li>
+<li><code>pheatmap</code></li>
+<li><code>RColorBrewer</code></li>
+<li><code>reshape2</code></li>
+<li><code>S4Vectors</code></li>
+<li><code>Biostrings</code></li>
+<li><code>SummarizedExperiment</code></li>
+<li><code>reactome.db</code></li>
+<li><code>org.Hs.eg.db</code></li>
+<li><code>org.Mm.eg.db</code></li>
+</ul>
+<blockquote>
+<p><strong>Note</strong>: When you create a custom environment for this plugin, these dependencies will be automatically installed.</p>
+</blockquote>
+<h2 id="example-data">Example Data</h2>
+<p>This plugin includes example data for testing:</p>
+<pre><code class="language-yaml">  annotation_file: maxquant-tmt/annotation_ptm_msqrob2.txt
+  feature_id_col: Sequence
+  protein_col: Proteins
+  min_probability: 0.75
+  impute: knn
+  summarization_method: mean
+  annotation_protein_file: maxquant-tmt/annotation_protein_msqrob2.txt
+  probability_col: Phospho (STY) Probabilities
+  remove_norm_channel: true
+  kinase_top_substrates: 30
+  site_col: Modified sequence
+  protein_file: maxquant-tmt/evidence_protein.txt
+  exclude_conditions: Norm
+  normalize_method: center.median
+  adjust_method: BH
+  perform_kinase_analysis: true
+  input_file: maxquant-tmt/evidence_ptm.txt
+  fasta_file: maxquant-tmt/uniprot_human.fasta
+  log2_transform: true
+  col_filter: 0.7
+  row_filter: 0.7
+  impute_order: after
+  aggregation_order: after
+  organism: human
+</code></pre>
+<p>Load example data by clicking the <strong>Load Example</strong> button in the UI.</p>
+<h2 id="usage">Usage</h2>
+<h3 id="via-ui">Via UI</h3>
+<ol>
+<li>Navigate to <strong>statistics</strong> → <strong>PhosR MaxQuant TMT Analysis</strong></li>
+<li>Fill in the required inputs</li>
+<li>Click <strong>Run Analysis</strong></li>
+</ol>
+<h3 id="via-plugin-system">Via Plugin System</h3>
+<pre><code class="language-typescript">const jobId = await pluginService.executePlugin('phosr-maxquant-tmt', {
+  // Add parameters here
+});
+</code></pre>
+
+</body>
+</html>

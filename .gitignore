@@ -1,0 +1,21 @@
+# R
+.Rhistory
+.RData
+.Rproj.user
+*.Rproj
+
+# Output files
+output/
+*.txt.bak
+test_output/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
