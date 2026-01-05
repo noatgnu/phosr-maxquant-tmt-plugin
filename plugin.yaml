@@ -2,7 +2,7 @@
 plugin:
   id: "phosr-maxquant-tmt"
   name: "PhosR MaxQuant TMT Analysis"
-  description: "Comprehensive phosphoproteomic data analysis including normalization, differential analysis, kinase activity prediction, pathway enrichment, PTM-SET analysis, and signaling network visualization using PhosR"
+  description: "Comprehensive phosphoproteomic data analysis including normalization, differential analysis, kinase activity prediction, pathway enrichment, PTM-SET analysis, and signaling network visualization using PhosR. Based on: Kim et al. (2021) Cell Reports 34(8):108771. Repository: https://bioconductor.org/packages/PhosR"
   version: "1.0.0"
   author: "CauldronGO Team"
   category: "statistics"
