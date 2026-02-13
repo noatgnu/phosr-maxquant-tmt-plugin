@@ -1,0 +1,304 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "PhosR MaxQuant TMT Analysis pipeline parameters",
+    "description": "Comprehensive phosphoproteomic data analysis including normalization, differential analysis, kinase activity prediction, pathway enrichment, PTM-SET analysis, and signaling network visualization using PhosR. Based on: Kim et al. (2021) Cell Reports 34(8):108771. Repository: https://bioconductor.org/packages/PhosR",
+    "type": "object",
+    "definitions": {
+        "plugin_parameters": {
+            "title": "Plugin parameters",
+            "description": "Parameters for the PhosR MaxQuant TMT Analysis plugin.",
+            "type": "object",
+            "properties": {
+                "adjust_method": {
+                    "type": "string",
+                    "description": "Method for multiple testing correction",
+                    "default": "BH"
+                },
+                "aggregation_order": {
+                    "type": "string",
+                    "description": "When to aggregate peptides to proteins. 'after': normalize/impute peptides then aggregate. 'before': aggregate peptides then normalize proteins.",
+                    "default": "after"
+                },
+                "alpha": {
+                    "type": "number",
+                    "description": "Adjusted p-value threshold for significance",
+                    "default": 0.05
+                },
+                "annotation_file": {
+                    "type": "string",
+                    "description": "Sample annotation with columns: Sample, Condition, BioReplicate",
+                    "format": "file-path"
+                },
+                "annotation_protein_file": {
+                    "type": "string",
+                    "description": "Sample annotation for protein data (same format as PTM annotation)",
+                    "format": "file-path"
+                },
+                "col_filter": {
+                    "type": "number",
+                    "description": "Maximum proportion of missing values allowed per sample. Default 0.7 = keep samples with ≥30% valid measurements.",
+                    "default": 0.7
+                },
+                "comparison_file": {
+                    "type": "string",
+                    "description": "Pairwise comparisons (columns: comparison_label, condition_A, condition_B)",
+                    "format": "file-path"
+                },
+                "exclude_conditions": {
+                    "type": "string",
+                    "description": "Comma-separated list of conditions to exclude from analysis (e.g., 'Norm,Empty')"
+                },
+                "fasta_file": {
+                    "type": "string",
+                    "description": "Protein database FASTA file for site mapping",
+                    "format": "file-path"
+                },
+                "feature_id_col": {
+                    "type": "string",
+                    "description": "Column name for feature identifiers in PTM file (stripped sequence)",
+                    "default": "Sequence"
+                },
+                "impute": {
+                    "type": "string",
+                    "description": "Imputation method for missing values",
+                    "default": "knn"
+                },
+                "impute_order": {
+                    "type": "string",
+                    "description": "When to impute missing values relative to normalization. 'after': normalize then impute. 'before': impute then normalize.",
+                    "default": "after"
+                },
+                "input_file": {
+                    "type": "string",
+                    "description": "MaxQuant evidence.txt file with PTM data (e.g., from phospho search)",
+                    "format": "file-path"
+                },
+                "kinase_num_motifs": {
+                    "type": "number",
+                    "description": "Number of motifs to consider in kinase-substrate scoring (higher values increase sensitivity but computation time)",
+                    "default": 5
+                },
+                "kinase_score_threshold": {
+                    "type": "number",
+                    "description": "Minimum score threshold for kinase-substrate predictions",
+                    "default": 0.8
+                },
+                "kinase_top_substrates": {
+                    "type": "number",
+                    "description": "Number of top substrates to select per kinase",
+                    "default": 30
+                },
+                "lfc_threshold": {
+                    "type": "number",
+                    "description": "Minimum absolute log2 fold-change threshold for significance",
+                    "default": 1
+                },
+                "log2_transform": {
+                    "type": "boolean",
+                    "description": "Apply log2 transformation to intensities",
+                    "default": true
+                },
+                "min_probability": {
+                    "type": "number",
+                    "description": "Minimum probability score for valid PTM sites (0-1)",
+                    "default": 0.75
+                },
+                "network_plot_top_interactions": {
+                    "type": "number",
+                    "description": "Number of top kinase-substrate interactions to show in network plots",
+                    "default": 50
+                },
+                "normalize_method": {
+                    "type": "string",
+                    "description": "Normalization method to apply",
+                    "default": "center.median"
+                },
+                "organism": {
+                    "type": "string",
+                    "description": "Organism for kinase-substrate database",
+                    "default": "human"
+                },
+                "perform_kinase_analysis": {
+                    "type": "boolean",
+                    "description": "Predict kinase activities and kinase-substrate relationships",
+                    "default": true
+                },
+                "probability_col": {
+                    "type": "string",
+                    "description": "Column name for site localization probabilities (e.g., Phospho (STY) Probabilities)",
+                    "default": "Phospho (STY) Probabilities"
+                },
+                "protein_col": {
+                    "type": "string",
+                    "description": "Column name for protein identifiers in PTM file",
+                    "default": "Proteins"
+                },
+                "protein_feature_id_col": {
+                    "type": "string",
+                    "description": "Column name for peptide sequence in protein evidence file",
+                    "default": "Sequence"
+                },
+                "protein_file": {
+                    "type": "string",
+                    "description": "MaxQuant evidence.txt file for protein-level data (optional)",
+                    "format": "file-path"
+                },
+                "protein_id_col": {
+                    "type": "string",
+                    "description": "Column name for protein IDs in protein evidence file",
+                    "default": "Proteins"
+                },
+                "remove_norm_channel": {
+                    "type": "boolean",
+                    "description": "Automatically remove samples with condition 'Norm'",
+                    "default": true
+                },
+                "row_filter": {
+                    "type": "number",
+                    "description": "Maximum proportion of missing values allowed per feature. Default 0.7 = keep features with ≥30% valid measurements.",
+                    "default": 0.7
+                },
+                "site_col": {
+                    "type": "string",
+                    "description": "Column name for PTM site information (modified sequence)",
+                    "default": "Modified sequence"
+                },
+                "summarization_method": {
+                    "type": "string",
+                    "description": "Method for combining peptide intensities to protein level. 'mean': arithmetic mean. 'median': median. 'sum': sum.",
+                    "default": "mean"
+                },
+                "top_diff_sites_heatmap": {
+                    "type": "number",
+                    "description": "Number of top differential phosphosites to show in heatmap",
+                    "default": 50
+                },
+                "top_pathways_plot": {
+                    "type": "number",
+                    "description": "Number of top enriched pathways to show in plots",
+                    "default": 20
+                },
+                "top_phosphosite_heatmap": {
+                    "type": "number",
+                    "description": "Number of phosphosites with highest kinase score variance to show in heatmap",
+                    "default": 50
+                },
+                "top_ptmset_plot": {
+                    "type": "number",
+                    "description": "Number of top enriched kinase substrate sets to show in plots",
+                    "default": 20
+                }
+            }
+        }
+    },
+    "properties": {
+        "adjust_method": {
+            "$ref": "#/definitions/plugin_parameters/properties/adjust_method"
+        },
+        "aggregation_order": {
+            "$ref": "#/definitions/plugin_parameters/properties/aggregation_order"
+        },
+        "alpha": {
+            "$ref": "#/definitions/plugin_parameters/properties/alpha"
+        },
+        "annotation_file": {
+            "$ref": "#/definitions/plugin_parameters/properties/annotation_file"
+        },
+        "annotation_protein_file": {
+            "$ref": "#/definitions/plugin_parameters/properties/annotation_protein_file"
+        },
+        "col_filter": {
+            "$ref": "#/definitions/plugin_parameters/properties/col_filter"
+        },
+        "comparison_file": {
+            "$ref": "#/definitions/plugin_parameters/properties/comparison_file"
+        },
+        "exclude_conditions": {
+            "$ref": "#/definitions/plugin_parameters/properties/exclude_conditions"
+        },
+        "fasta_file": {
+            "$ref": "#/definitions/plugin_parameters/properties/fasta_file"
+        },
+        "feature_id_col": {
+            "$ref": "#/definitions/plugin_parameters/properties/feature_id_col"
+        },
+        "impute": {
+            "$ref": "#/definitions/plugin_parameters/properties/impute"
+        },
+        "impute_order": {
+            "$ref": "#/definitions/plugin_parameters/properties/impute_order"
+        },
+        "input_file": {
+            "$ref": "#/definitions/plugin_parameters/properties/input_file"
+        },
+        "kinase_num_motifs": {
+            "$ref": "#/definitions/plugin_parameters/properties/kinase_num_motifs"
+        },
+        "kinase_score_threshold": {
+            "$ref": "#/definitions/plugin_parameters/properties/kinase_score_threshold"
+        },
+        "kinase_top_substrates": {
+            "$ref": "#/definitions/plugin_parameters/properties/kinase_top_substrates"
+        },
+        "lfc_threshold": {
+            "$ref": "#/definitions/plugin_parameters/properties/lfc_threshold"
+        },
+        "log2_transform": {
+            "$ref": "#/definitions/plugin_parameters/properties/log2_transform"
+        },
+        "min_probability": {
+            "$ref": "#/definitions/plugin_parameters/properties/min_probability"
+        },
+        "network_plot_top_interactions": {
+            "$ref": "#/definitions/plugin_parameters/properties/network_plot_top_interactions"
+        },
+        "normalize_method": {
+            "$ref": "#/definitions/plugin_parameters/properties/normalize_method"
+        },
+        "organism": {
+            "$ref": "#/definitions/plugin_parameters/properties/organism"
+        },
+        "perform_kinase_analysis": {
+            "$ref": "#/definitions/plugin_parameters/properties/perform_kinase_analysis"
+        },
+        "probability_col": {
+            "$ref": "#/definitions/plugin_parameters/properties/probability_col"
+        },
+        "protein_col": {
+            "$ref": "#/definitions/plugin_parameters/properties/protein_col"
+        },
+        "protein_feature_id_col": {
+            "$ref": "#/definitions/plugin_parameters/properties/protein_feature_id_col"
+        },
+        "protein_file": {
+            "$ref": "#/definitions/plugin_parameters/properties/protein_file"
+        },
+        "protein_id_col": {
+            "$ref": "#/definitions/plugin_parameters/properties/protein_id_col"
+        },
+        "remove_norm_channel": {
+            "$ref": "#/definitions/plugin_parameters/properties/remove_norm_channel"
+        },
+        "row_filter": {
+            "$ref": "#/definitions/plugin_parameters/properties/row_filter"
+        },
+        "site_col": {
+            "$ref": "#/definitions/plugin_parameters/properties/site_col"
+        },
+        "summarization_method": {
+            "$ref": "#/definitions/plugin_parameters/properties/summarization_method"
+        },
+        "top_diff_sites_heatmap": {
+            "$ref": "#/definitions/plugin_parameters/properties/top_diff_sites_heatmap"
+        },
+        "top_pathways_plot": {
+            "$ref": "#/definitions/plugin_parameters/properties/top_pathways_plot"
+        },
+        "top_phosphosite_heatmap": {
+            "$ref": "#/definitions/plugin_parameters/properties/top_phosphosite_heatmap"
+        },
+        "top_ptmset_plot": {
+            "$ref": "#/definitions/plugin_parameters/properties/top_ptmset_plot"
+        }
+    }
+}

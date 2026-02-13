@@ -19,3 +19,11 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Nextflow
+work/
+.nextflow/
+.nextflow.log*
+.nextflow.pid
+results/
+
