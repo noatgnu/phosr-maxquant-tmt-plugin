@@ -156,30 +156,30 @@ jobs:
         run: |
           cd slivka-project
           JOB_RESPONSE=$(curl -s -X POST http://localhost:8000/api/services/phosr-maxquant-tmt/jobs \
-            -F "annotation_file=@testdata/annotation_ptm_msqrob2.txt" \
+            -F "site_col=Modified sequence" \
+            -F "protein_col=Proteins" \
+            -F "probability_col=Phospho (STY) Probabilities" \
+            -F "impute_order=after" \
             -F "protein_file=@testdata/evidence_protein.txt" \
             -F "min_probability=0.75" \
-            -F "impute_order=after" \
-            -F "aggregation_order=after" \
-            -F "protein_col=Proteins" \
-            -F "log2_transform=true" \
-            -F "row_filter=0.7" \
-            -F "normalize_method=center.median" \
-            -F "adjust_method=BH" \
-            -F "organism=human" \
-            -F "kinase_top_substrates=30" \
-            -F "input_file=@testdata/evidence_ptm.txt" \
-            -F "annotation_protein_file=@testdata/annotation_protein_msqrob2.txt" \
-            -F "site_col=Modified sequence" \
-            -F "probability_col=Phospho (STY) Probabilities" \
-            -F "feature_id_col=Sequence" \
-            -F "remove_norm_channel=true" \
-            -F "impute=knn" \
             -F "summarization_method=mean" \
-            -F "perform_kinase_analysis=true" \
-            -F "exclude_conditions=Norm" \
+            -F "annotation_file=@testdata/annotation_ptm_msqrob2.txt" \
+            -F "log2_transform=true" \
+            -F "remove_norm_channel=true" \
             -F "col_filter=0.7" \
-            -F "fasta_file=@testdata/uniprot_human.fasta")
+            -F "row_filter=0.7" \
+            -F "impute=knn" \
+            -F "aggregation_order=after" \
+            -F "adjust_method=BH" \
+            -F "input_file=@testdata/evidence_ptm.txt" \
+            -F "fasta_file=@testdata/uniprot_human.fasta" \
+            -F "feature_id_col=Sequence" \
+            -F "exclude_conditions=Norm" \
+            -F "normalize_method=center.median" \
+            -F "organism=human" \
+            -F "perform_kinase_analysis=true" \
+            -F "kinase_top_substrates=30" \
+            -F "annotation_protein_file=@testdata/annotation_protein_msqrob2.txt")
 
           JOB_ID=$(echo $JOB_RESPONSE | python -c "import sys,json; print(json.load(sys.stdin)['id'])")
           echo "Job ID: $JOB_ID"

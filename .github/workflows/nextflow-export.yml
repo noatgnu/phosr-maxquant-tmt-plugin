@@ -108,30 +108,30 @@ jobs:
       - name: Run Nextflow with Examples
         run: |
           nextflow run main.nf \
-          --impute_order 'after' \
-          --aggregation_order 'after' \
-          --adjust_method 'BH' \
-          --annotation_protein_file examples/maxquant-tmt/annotation_protein_msqrob2.txt \
-          --site_col 'Modified sequence' \
-          --protein_col 'Proteins' \
-          --probability_col 'Phospho (STY) Probabilities' \
-          --row_filter '0.7' \
-          --normalize_method 'center.median' \
-          --summarization_method 'mean' \
-          --organism 'human' \
-          --fasta_file examples/maxquant-tmt/uniprot_human.fasta \
-          --feature_id_col 'Sequence' \
-          --protein_file examples/maxquant-tmt/evidence_protein.txt \
-          --min_probability '0.75' \
           --remove_norm_channel 'true' \
           --col_filter '0.7' \
-          --impute 'knn' \
           --input_file examples/maxquant-tmt/evidence_ptm.txt \
+          --fasta_file examples/maxquant-tmt/uniprot_human.fasta \
           --annotation_file examples/maxquant-tmt/annotation_ptm_msqrob2.txt \
+          --feature_id_col 'Sequence' \
+          --protein_col 'Proteins' \
+          --protein_file examples/maxquant-tmt/evidence_protein.txt \
           --log2_transform 'true' \
           --exclude_conditions 'Norm' \
+          --probability_col 'Phospho (STY) Probabilities' \
+          --row_filter '0.7' \
+          --impute_order 'after' \
+          --impute 'knn' \
+          --aggregation_order 'after' \
+          --adjust_method 'BH' \
+          --site_col 'Modified sequence' \
+          --summarization_method 'mean' \
+          --organism 'human' \
           --perform_kinase_analysis 'true' \
           --kinase_top_substrates '30' \
+          --annotation_protein_file examples/maxquant-tmt/annotation_protein_msqrob2.txt \
+          --min_probability '0.75' \
+          --normalize_method 'center.median' \
           -profile docker \
           --outdir results
 

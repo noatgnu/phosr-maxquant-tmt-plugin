@@ -431,27 +431,27 @@ execution:
 tests:
   - applicable-runners: ["default"]
     parameters:
-      exclude_conditions: Norm
-      col_filter: 0.7
-      fasta_file: maxquant-tmt/uniprot_human.fasta
       annotation_file: maxquant-tmt/annotation_ptm_msqrob2.txt
-      protein_file: maxquant-tmt/evidence_protein.txt
-      min_probability: 0.75
-      impute_order: after
-      aggregation_order: after
-      protein_col: Proteins
       log2_transform: true
+      remove_norm_channel: true
+      col_filter: 0.7
       row_filter: 0.7
-      normalize_method: center.median
+      impute: knn
+      aggregation_order: after
       adjust_method: BH
-      organism: human
-      kinase_top_substrates: 30
       input_file: maxquant-tmt/evidence_ptm.txt
+      fasta_file: maxquant-tmt/uniprot_human.fasta
+      feature_id_col: Sequence
+      exclude_conditions: Norm
+      normalize_method: center.median
+      organism: human
+      perform_kinase_analysis: true
+      kinase_top_substrates: 30
       annotation_protein_file: maxquant-tmt/annotation_protein_msqrob2.txt
       site_col: Modified sequence
+      protein_col: Proteins
       probability_col: Phospho (STY) Probabilities
-      feature_id_col: Sequence
-      remove_norm_channel: true
-      impute: knn
+      impute_order: after
+      protein_file: maxquant-tmt/evidence_protein.txt
+      min_probability: 0.75
       summarization_method: mean
-      perform_kinase_analysis: true
