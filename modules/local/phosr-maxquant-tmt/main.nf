@@ -74,202 +74,10 @@ process PHOSR_MAXQUANT_TMT {
     ARG_LIST=()
 
     
-    # Mapping for row_filter
-    VAL="$row_filter"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--row_filter" "\$VAL")
-    fi
-    
-    # Mapping for aggregation_order
-    VAL="$aggregation_order"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--aggregation_order" "\$VAL")
-    fi
-    
-    # Mapping for perform_kinase_analysis
-    VAL="$perform_kinase_analysis"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        if [ "\$VAL" = "true" ]; then
-            ARG_LIST+=("--perform_kinase_analysis")
-        fi
-    fi
-    
     # Mapping for kinase_score_threshold
     VAL="$kinase_score_threshold"
     if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
         ARG_LIST+=("--kinase_score_threshold" "\$VAL")
-    fi
-    
-    # Mapping for top_phosphosite_heatmap
-    VAL="$top_phosphosite_heatmap"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--top_phosphosite_heatmap" "\$VAL")
-    fi
-    
-    # Mapping for input_file
-    VAL="$input_file"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--input_file" "\$VAL")
-    fi
-    
-    # Mapping for protein_file
-    VAL="$protein_file"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--protein_file" "\$VAL")
-    fi
-    
-    # Mapping for top_diff_sites_heatmap
-    VAL="$top_diff_sites_heatmap"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--top_diff_sites_heatmap" "\$VAL")
-    fi
-    
-    # Mapping for organism
-    VAL="$organism"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--organism" "\$VAL")
-    fi
-    
-    # Mapping for protein_feature_id_col
-    VAL="$protein_feature_id_col"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--protein_feature_id_col" "\$VAL")
-    fi
-    
-    # Mapping for probability_col
-    VAL="$probability_col"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--probability_col" "\$VAL")
-    fi
-    
-    # Mapping for min_probability
-    VAL="$min_probability"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--min_probability" "\$VAL")
-    fi
-    
-    # Mapping for exclude_conditions
-    VAL="$exclude_conditions"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--exclude_conditions" "\$VAL")
-    fi
-    
-    # Mapping for remove_norm_channel
-    VAL="$remove_norm_channel"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        if [ "\$VAL" = "true" ]; then
-            ARG_LIST+=("--remove_norm_channel")
-        fi
-    fi
-    
-    # Mapping for normalize_method
-    VAL="$normalize_method"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--normalize_method" "\$VAL")
-    fi
-    
-    # Mapping for lfc_threshold
-    VAL="$lfc_threshold"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--lfc_threshold" "\$VAL")
-    fi
-    
-    # Mapping for kinase_num_motifs
-    VAL="$kinase_num_motifs"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--kinase_num_motifs" "\$VAL")
-    fi
-    
-    # Mapping for annotation_file
-    VAL="$annotation_file"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--annotation_file" "\$VAL")
-    fi
-    
-    # Mapping for site_col
-    VAL="$site_col"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--site_col" "\$VAL")
-    fi
-    
-    # Mapping for comparison_file
-    VAL="$comparison_file"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--comparison_file" "\$VAL")
-    fi
-    
-    # Mapping for log2_transform
-    VAL="$log2_transform"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        if [ "\$VAL" = "true" ]; then
-            ARG_LIST+=("--log2_transform")
-        fi
-    fi
-    
-    # Mapping for alpha
-    VAL="$alpha"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--alpha" "\$VAL")
-    fi
-    
-    # Mapping for fasta_file
-    VAL="$fasta_file"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--fasta_file" "\$VAL")
-    fi
-    
-    # Mapping for annotation_protein_file
-    VAL="$annotation_protein_file"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--annotation_protein_file" "\$VAL")
-    fi
-    
-    # Mapping for col_filter
-    VAL="$col_filter"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--col_filter" "\$VAL")
-    fi
-    
-    # Mapping for impute_order
-    VAL="$impute_order"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--impute_order" "\$VAL")
-    fi
-    
-    # Mapping for impute
-    VAL="$impute"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--impute" "\$VAL")
-    fi
-    
-    # Mapping for adjust_method
-    VAL="$adjust_method"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--adjust_method" "\$VAL")
-    fi
-    
-    # Mapping for kinase_top_substrates
-    VAL="$kinase_top_substrates"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--kinase_top_substrates" "\$VAL")
-    fi
-    
-    # Mapping for top_pathways_plot
-    VAL="$top_pathways_plot"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--top_pathways_plot" "\$VAL")
-    fi
-    
-    # Mapping for feature_id_col
-    VAL="$feature_id_col"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--feature_id_col" "\$VAL")
-    fi
-    
-    # Mapping for protein_col
-    VAL="$protein_col"
-    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
-        ARG_LIST+=("--protein_col" "\$VAL")
     fi
     
     # Mapping for protein_id_col
@@ -284,16 +92,208 @@ process PHOSR_MAXQUANT_TMT {
         ARG_LIST+=("--summarization_method" "\$VAL")
     fi
     
+    # Mapping for lfc_threshold
+    VAL="$lfc_threshold"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--lfc_threshold" "\$VAL")
+    fi
+    
+    # Mapping for organism
+    VAL="$organism"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--organism" "\$VAL")
+    fi
+    
+    # Mapping for perform_kinase_analysis
+    VAL="$perform_kinase_analysis"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        if [ "\$VAL" = "true" ]; then
+            ARG_LIST+=("--perform_kinase_analysis")
+        fi
+    fi
+    
+    # Mapping for kinase_top_substrates
+    VAL="$kinase_top_substrates"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--kinase_top_substrates" "\$VAL")
+    fi
+    
+    # Mapping for kinase_num_motifs
+    VAL="$kinase_num_motifs"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--kinase_num_motifs" "\$VAL")
+    fi
+    
     # Mapping for top_ptmset_plot
     VAL="$top_ptmset_plot"
     if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
         ARG_LIST+=("--top_ptmset_plot" "\$VAL")
     fi
     
+    # Mapping for comparison_file
+    VAL="$comparison_file"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--comparison_file" "\$VAL")
+    fi
+    
+    # Mapping for remove_norm_channel
+    VAL="$remove_norm_channel"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        if [ "\$VAL" = "true" ]; then
+            ARG_LIST+=("--remove_norm_channel")
+        fi
+    fi
+    
+    # Mapping for alpha
+    VAL="$alpha"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--alpha" "\$VAL")
+    fi
+    
+    # Mapping for aggregation_order
+    VAL="$aggregation_order"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--aggregation_order" "\$VAL")
+    fi
+    
+    # Mapping for fasta_file
+    VAL="$fasta_file"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--fasta_file" "\$VAL")
+    fi
+    
+    # Mapping for protein_col
+    VAL="$protein_col"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--protein_col" "\$VAL")
+    fi
+    
+    # Mapping for probability_col
+    VAL="$probability_col"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--probability_col" "\$VAL")
+    fi
+    
+    # Mapping for normalize_method
+    VAL="$normalize_method"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--normalize_method" "\$VAL")
+    fi
+    
+    # Mapping for row_filter
+    VAL="$row_filter"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--row_filter" "\$VAL")
+    fi
+    
+    # Mapping for top_diff_sites_heatmap
+    VAL="$top_diff_sites_heatmap"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--top_diff_sites_heatmap" "\$VAL")
+    fi
+    
     # Mapping for network_plot_top_interactions
     VAL="$network_plot_top_interactions"
     if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
         ARG_LIST+=("--network_plot_top_interactions" "\$VAL")
+    fi
+    
+    # Mapping for feature_id_col
+    VAL="$feature_id_col"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--feature_id_col" "\$VAL")
+    fi
+    
+    # Mapping for adjust_method
+    VAL="$adjust_method"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--adjust_method" "\$VAL")
+    fi
+    
+    # Mapping for top_phosphosite_heatmap
+    VAL="$top_phosphosite_heatmap"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--top_phosphosite_heatmap" "\$VAL")
+    fi
+    
+    # Mapping for annotation_protein_file
+    VAL="$annotation_protein_file"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--annotation_protein_file" "\$VAL")
+    fi
+    
+    # Mapping for protein_file
+    VAL="$protein_file"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--protein_file" "\$VAL")
+    fi
+    
+    # Mapping for protein_feature_id_col
+    VAL="$protein_feature_id_col"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--protein_feature_id_col" "\$VAL")
+    fi
+    
+    # Mapping for min_probability
+    VAL="$min_probability"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--min_probability" "\$VAL")
+    fi
+    
+    # Mapping for impute_order
+    VAL="$impute_order"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--impute_order" "\$VAL")
+    fi
+    
+    # Mapping for top_pathways_plot
+    VAL="$top_pathways_plot"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--top_pathways_plot" "\$VAL")
+    fi
+    
+    # Mapping for input_file
+    VAL="$input_file"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--input_file" "\$VAL")
+    fi
+    
+    # Mapping for annotation_file
+    VAL="$annotation_file"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--annotation_file" "\$VAL")
+    fi
+    
+    # Mapping for site_col
+    VAL="$site_col"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--site_col" "\$VAL")
+    fi
+    
+    # Mapping for log2_transform
+    VAL="$log2_transform"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        if [ "\$VAL" = "true" ]; then
+            ARG_LIST+=("--log2_transform")
+        fi
+    fi
+    
+    # Mapping for exclude_conditions
+    VAL="$exclude_conditions"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--exclude_conditions" "\$VAL")
+    fi
+    
+    # Mapping for col_filter
+    VAL="$col_filter"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--col_filter" "\$VAL")
+    fi
+    
+    # Mapping for impute
+    VAL="$impute"
+    if [ -n "\$VAL" ] && [ "\$VAL" != "null" ] && [ "\$VAL" != "[]" ]; then
+        ARG_LIST+=("--impute" "\$VAL")
     fi
     
     Rscript --vanilla --slave /app/phosr_maxquant_tmt_modular.R --args \

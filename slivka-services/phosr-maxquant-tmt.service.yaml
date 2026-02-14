@@ -1,0 +1,457 @@
+# Slivka service configuration for phosr-maxquant-tmt
+# Generated from Cauldron plugin format
+#
+# For file inputs that reference large databases (e.g., FASTA databases),
+# consider configuring them as environment variables pointing to shared storage:
+#   env:
+#     DATABASE_PATH: "${SLIVKA_HOME}/databases/uniref90.fasta"
+# Then reference in args as: arg: "--db=${DATABASE_PATH}"
+
+slivka-version: "0.8"
+name: phosr-maxquant-tmt
+description: Comprehensive phosphoproteomic data analysis including normalization, differential analysis, kinase activity prediction, pathway enrichment, PTM-SET analysis, and signaling network visualization using PhosR. Based on: Kim et al. (2021) Cell Reports 34(8):108771. Repository: https://bioconductor.org/packages/PhosR
+author: CauldronGO Team
+version: "1.0.0"
+license: MIT
+classifiers:
+  - "Topic :: Scientific/Engineering :: Bio-Informatics"
+
+parameters:
+  input_file:
+    name: "PTM Evidence File"
+    description: "MaxQuant evidence.txt file with PTM data (e.g., from phospho search)"
+    type: file
+    required: true
+    media-type: text/tab-separated-values
+  fasta_file:
+    name: "FASTA File"
+    description: "Protein database FASTA file for site mapping"
+    type: file
+    media-type: application/fasta
+  annotation_file:
+    name: "PTM Annotation File"
+    description: "Sample annotation with columns: Sample, Condition, BioReplicate"
+    type: file
+    required: true
+    media-type: text/csv
+  annotation_protein_file:
+    name: "Protein Annotation File"
+    description: "Sample annotation for protein data (same format as PTM annotation)"
+    type: file
+    media-type: text/csv
+  feature_id_col:
+    name: "PTM Feature ID Column"
+    description: "Column name for feature identifiers in PTM file (stripped sequence)"
+    type: text
+    required: true
+    default: Sequence
+  site_col:
+    name: "PTM Site Column"
+    description: "Column name for PTM site information (modified sequence)"
+    type: text
+    required: true
+    default: Modified sequence
+  protein_col:
+    name: "PTM Protein Column"
+    description: "Column name for protein identifiers in PTM file"
+    type: text
+    required: true
+    default: Proteins
+  probability_col:
+    name: "PTM Probability Column"
+    description: "Column name for site localization probabilities (e.g., Phospho (STY) Probabilities)"
+    type: text
+    default: Phospho (STY) Probabilities
+  min_probability:
+    name: "Minimum Localization Probability"
+    description: "Minimum probability score for valid PTM sites (0-1)"
+    type: float
+    default: 0.75
+    min: 0
+    max: 1
+  protein_file:
+    name: "Protein Evidence File"
+    description: "MaxQuant evidence.txt file for protein-level data (optional)"
+    type: file
+    media-type: text/tab-separated-values
+  protein_feature_id_col:
+    name: "Protein Feature ID Column"
+    description: "Column name for peptide sequence in protein evidence file"
+    type: text
+    default: Sequence
+  protein_id_col:
+    name: "Protein ID Column"
+    description: "Column name for protein IDs in protein evidence file"
+    type: text
+    default: Proteins
+  comparison_file:
+    name: "Comparison Matrix File"
+    description: "Pairwise comparisons (columns: comparison_label, condition_A, condition_B)"
+    type: file
+    media-type: text/csv
+  log2_transform:
+    name: "Apply Log2 Transformation"
+    description: "Apply log2 transformation to intensities"
+    type: boolean
+    default: true
+  exclude_conditions:
+    name: "Exclude Conditions (comma-separated)"
+    description: "Comma-separated list of conditions to exclude from analysis (e.g., 'Norm,Empty')"
+    type: text
+  remove_norm_channel:
+    name: "Remove 'Norm' Channel"
+    description: "Automatically remove samples with condition 'Norm'"
+    type: boolean
+    default: true
+  col_filter:
+    name: "Column Completeness Threshold"
+    description: "Maximum proportion of missing values allowed per sample. Default 0.7 = keep samples with ≥30% valid measurements."
+    type: float
+    default: 0.7
+    min: 0
+    max: 1
+  row_filter:
+    name: "Row Completeness Threshold"
+    description: "Maximum proportion of missing values allowed per feature. Default 0.7 = keep features with ≥30% valid measurements."
+    type: float
+    default: 0.7
+    min: 0
+    max: 1
+  impute_order:
+    name: "Imputation Order"
+    description: "When to impute missing values relative to normalization. 'after': normalize then impute. 'before': impute then normalize."
+    type: choice
+    default: after
+    choices:
+      - before
+      - after
+  impute:
+    name: "Imputation Method"
+    description: "Imputation method for missing values"
+    type: choice
+    default: knn
+    choices:
+      - none
+      - knn
+      - MinDet
+      - MinProb
+      - min
+      - zero
+      - mixed
+      - nbavg
+      - with
+      - QRILC
+      - MLE
+      - bpca
+  normalize_method:
+    name: "Normalization Method"
+    description: "Normalization method to apply"
+    type: choice
+    default: center.median
+    choices:
+      - none
+      - center.median
+      - center.mean
+      - quantiles
+      - quantiles.robust
+      - vsn
+  aggregation_order:
+    name: "Aggregation Order"
+    description: "When to aggregate peptides to proteins. 'after': normalize/impute peptides then aggregate. 'before': aggregate peptides then normalize proteins."
+    type: choice
+    default: after
+    choices:
+      - before
+      - after
+  summarization_method:
+    name: "Protein Summarization Method"
+    description: "Method for combining peptide intensities to protein level. 'mean': arithmetic mean. 'median': median. 'sum': sum."
+    type: choice
+    default: mean
+    choices:
+      - mean
+      - median
+      - sum
+  adjust_method:
+    name: "P-value Adjustment Method"
+    description: "Method for multiple testing correction"
+    type: choice
+    default: BH
+    choices:
+      - BH
+      - bonferroni
+      - holm
+      - hochberg
+      - BY
+      - none
+  alpha:
+    name: "Significance Level"
+    description: "Adjusted p-value threshold for significance"
+    type: float
+    default: 0.05
+    min: 0.001
+    max: 0.2
+  lfc_threshold:
+    name: "Log2 Fold Change Threshold"
+    description: "Minimum absolute log2 fold-change threshold for significance"
+    type: float
+    default: 1
+    min: 0
+    max: 5
+  organism:
+    name: "Organism"
+    description: "Organism for kinase-substrate database"
+    type: choice
+    required: true
+    default: human
+    choices:
+      - human
+      - mouse
+  perform_kinase_analysis:
+    name: "Perform Kinase Activity Analysis"
+    description: "Predict kinase activities and kinase-substrate relationships"
+    type: boolean
+    default: true
+  kinase_top_substrates:
+    name: "Top Substrates for Kinase Prediction"
+    description: "Number of top substrates to select per kinase"
+    type: float
+    default: 30
+    min: 10
+    max: 100
+  kinase_score_threshold:
+    name: "Kinase Score Threshold"
+    description: "Minimum score threshold for kinase-substrate predictions"
+    type: float
+    default: 0.8
+    min: 0
+    max: 1
+  kinase_num_motifs:
+    name: "Number of Kinase Motifs"
+    description: "Number of motifs to consider in kinase-substrate scoring (higher values increase sensitivity but computation time)"
+    type: float
+    default: 5
+    min: 1
+    max: 10
+  top_pathways_plot:
+    name: "Top Pathways to Plot"
+    description: "Number of top enriched pathways to show in plots"
+    type: float
+    default: 20
+    min: 10
+    max: 50
+  top_ptmset_plot:
+    name: "Top PTM-SETs to Plot"
+    description: "Number of top enriched kinase substrate sets to show in plots"
+    type: float
+    default: 20
+    min: 10
+    max: 50
+  top_diff_sites_heatmap:
+    name: "Top Differential Sites in Heatmap"
+    description: "Number of top differential phosphosites to show in heatmap"
+    type: float
+    default: 50
+    min: 10
+    max: 100
+  top_phosphosite_heatmap:
+    name: "Top Phosphosites by Variance in Heatmap"
+    description: "Number of phosphosites with highest kinase score variance to show in heatmap"
+    type: float
+    default: 50
+    min: 10
+    max: 100
+  network_plot_top_interactions:
+    name: "Top Kinase-Substrate Interactions to Plot"
+    description: "Number of top kinase-substrate interactions to show in network plots"
+    type: float
+    default: 50
+    min: 20
+    max: 100
+
+command:
+  - Rscript
+  - --vanilla
+  - --slave
+  - phosr_maxquant_tmt_modular.R
+  - --args
+
+args:
+  input_file:
+    arg: "--input_file=$(value)"
+    symlink: "input_file"
+  fasta_file:
+    arg: "--fasta_file=$(value)"
+    symlink: "fasta_file"
+  annotation_file:
+    arg: "--annotation_file=$(value)"
+    symlink: "annotation_file"
+  annotation_protein_file:
+    arg: "--annotation_protein_file=$(value)"
+    symlink: "annotation_protein_file"
+  feature_id_col:
+    arg: "--feature_id_col=$(value)"
+  site_col:
+    arg: "--site_col=$(value)"
+  protein_col:
+    arg: "--protein_col=$(value)"
+  probability_col:
+    arg: "--probability_col=$(value)"
+  min_probability:
+    arg: "--min_probability=$(value)"
+  protein_file:
+    arg: "--protein_file=$(value)"
+    symlink: "protein_file"
+  protein_feature_id_col:
+    arg: "--protein_feature_id_col=$(value)"
+  protein_id_col:
+    arg: "--protein_id_col=$(value)"
+  comparison_file:
+    arg: "--comparison_file=$(value)"
+    symlink: "comparison_file"
+  log2_transform:
+    arg: "--log2_transform"
+    condition: "$(value)"
+  exclude_conditions:
+    arg: "--exclude_conditions=$(value)"
+  remove_norm_channel:
+    arg: "--remove_norm_channel"
+    condition: "$(value)"
+  col_filter:
+    arg: "--col_filter=$(value)"
+  row_filter:
+    arg: "--row_filter=$(value)"
+  impute_order:
+    arg: "--impute_order=$(value)"
+  impute:
+    arg: "--impute=$(value)"
+  normalize_method:
+    arg: "--normalize_method=$(value)"
+  aggregation_order:
+    arg: "--aggregation_order=$(value)"
+  summarization_method:
+    arg: "--summarization_method=$(value)"
+  adjust_method:
+    arg: "--adjust_method=$(value)"
+  alpha:
+    arg: "--alpha=$(value)"
+  lfc_threshold:
+    arg: "--lfc_threshold=$(value)"
+  organism:
+    arg: "--organism=$(value)"
+  perform_kinase_analysis:
+    arg: "--perform_kinase_analysis"
+    condition: "$(value)"
+  kinase_top_substrates:
+    arg: "--kinase_top_substrates=$(value)"
+  kinase_score_threshold:
+    arg: "--kinase_score_threshold=$(value)"
+  kinase_num_motifs:
+    arg: "--kinase_num_motifs=$(value)"
+  top_pathways_plot:
+    arg: "--top_pathways_plot=$(value)"
+  top_ptmset_plot:
+    arg: "--top_ptmset_plot=$(value)"
+  top_diff_sites_heatmap:
+    arg: "--top_diff_sites_heatmap=$(value)"
+  top_phosphosite_heatmap:
+    arg: "--top_phosphosite_heatmap=$(value)"
+  network_plot_top_interactions:
+    arg: "--network_plot_top_interactions=$(value)"
+  _output_dir:
+    arg: "--output_folder=."
+
+outputs:
+  dpa_results:
+    path: "dpa_results.txt"
+    media-type: text/tab-separated-values
+  dpu_results_phosr_format:
+    path: "dpu_results_phosr_format.txt"
+    media-type: text/tab-separated-values
+  phosphosite_intensities:
+    path: "phosphosite_intensities.txt"
+    media-type: text/tab-separated-values
+  kinase_substrate_scores:
+    path: "kinase_substrate_scores.txt"
+    media-type: text/tab-separated-values
+  kinase_activities:
+    path: "kinase_activities.txt"
+    media-type: text/tab-separated-values
+  differential_kinase_activities:
+    path: "differential_kinase_activities.txt"
+    media-type: text/tab-separated-values
+  top_differential_sites_data:
+    path: "top_differential_sites.txt"
+    media-type: text/tab-separated-values
+  pathway_enrichment_all_comparisons:
+    path: "pathway_enrichment_all_comparisons.txt"
+    media-type: text/tab-separated-values
+  ptmset_enrichment_all_comparisons:
+    path: "ptmset_enrichment_all_comparisons.txt"
+    media-type: text/tab-separated-values
+  kinase_substrate_network_all_comparisons:
+    path: "kinase_substrate_network_all_comparisons.txt"
+    media-type: text/tab-separated-values
+  qc_plots:
+    path: "qc_plots.pdf"
+    media-type: application/pdf
+  volcano_plots:
+    path: "volcano_plots.pdf"
+    media-type: application/pdf
+  kinase_heatmap:
+    path: "kinase_heatmap.pdf"
+    media-type: application/pdf
+  phosphosite_heatmap:
+    path: "phosphosite_heatmap.pdf"
+    media-type: application/pdf
+  site_class_distribution:
+    path: "site_class_distribution.pdf"
+    media-type: application/pdf
+  top_differential_sites_heatmap:
+    path: "top_differential_sites.pdf"
+    media-type: application/pdf
+  kinase_family_analysis:
+    path: "kinase_family_analysis.pdf"
+    media-type: application/pdf
+  pathway_enrichment_plots:
+    path: "pathway_enrichment.pdf"
+    media-type: application/pdf
+  ptmset_enrichment_plots:
+    path: "ptmset_enrichment.pdf"
+    media-type: application/pdf
+  kinase_substrate_network_plots:
+    path: "kinase_substrate_network.pdf"
+    media-type: application/pdf
+
+execution:
+  runners:
+    default:
+      type: SlivkaQueueRunner
+
+tests:
+  - applicable-runners: ["default"]
+    parameters:
+      exclude_conditions: Norm
+      col_filter: 0.7
+      fasta_file: maxquant-tmt/uniprot_human.fasta
+      annotation_file: maxquant-tmt/annotation_ptm_msqrob2.txt
+      protein_file: maxquant-tmt/evidence_protein.txt
+      min_probability: 0.75
+      impute_order: after
+      aggregation_order: after
+      protein_col: Proteins
+      log2_transform: true
+      row_filter: 0.7
+      normalize_method: center.median
+      adjust_method: BH
+      organism: human
+      kinase_top_substrates: 30
+      input_file: maxquant-tmt/evidence_ptm.txt
+      annotation_protein_file: maxquant-tmt/annotation_protein_msqrob2.txt
+      site_col: Modified sequence
+      probability_col: Phospho (STY) Probabilities
+      feature_id_col: Sequence
+      remove_norm_channel: true
+      impute: knn
+      summarization_method: mean
+      perform_kinase_analysis: true
