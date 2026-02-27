@@ -354,30 +354,30 @@ Dependencies are defined in: `r-packages.txt`
 This plugin includes example data for testing:
 
 ```yaml
+  protein_col: Proteins
+  protein_file: maxquant-tmt/evidence_protein.txt
+  probability_col: Phospho (STY) Probabilities
+  min_probability: 0.75
+  log2_transform: true
+  kinase_top_substrates: 30
+  site_col: Modified sequence
+  remove_norm_channel: true
+  impute_order: after
   summarization_method: mean
   adjust_method: BH
-  organism: human
+  col_filter: 0.7
   input_file: maxquant-tmt/evidence_ptm.txt
-  annotation_protein_file: maxquant-tmt/annotation_protein_msqrob2.txt
-  probability_col: Phospho (STY) Probabilities
-  log2_transform: true
   normalize_method: center.median
-  aggregation_order: after
   perform_kinase_analysis: true
   fasta_file: maxquant-tmt/uniprot_human.fasta
-  feature_id_col: Sequence
-  protein_file: maxquant-tmt/evidence_protein.txt
-  remove_norm_channel: true
-  row_filter: 0.7
-  impute_order: after
-  site_col: Modified sequence
-  min_probability: 0.75
+  annotation_protein_file: maxquant-tmt/annotation_protein_msqrob2.txt
   exclude_conditions: Norm
-  col_filter: 0.7
+  row_filter: 0.7
   impute: knn
-  kinase_top_substrates: 30
+  aggregation_order: after
+  organism: human
   annotation_file: maxquant-tmt/annotation_ptm_msqrob2.txt
-  protein_col: Proteins
+  feature_id_col: Sequence
 ```
 
 Load example data by clicking the **Load Example** button in the UI.
